@@ -14,17 +14,19 @@ template<class T>
 class LinkedList {
     private :
         ListNode<T> *head;
-        //int length;
+        void reverse(ListNode<T> *, ListNode<T> *);
     public :    
         LinkedList();
         //LinkedList(std::istream &);
         ~LinkedList();
 
         LinkedList(const LinkedList &);
-        void push(T ival);
-        void append(T ival);
+        void push(T);
+        void append(T);
         void printList();
         void reverse();
+        void reverse(ListNode<T> *);
+        void reverse(int m, int n);
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -49,6 +51,58 @@ template<class T> void LinkedList<T>::reverse() {
     }
     head = prev;
 }
+
+template<class T> void LinkedList<T>::reverse(ListNode<T> *p) {
+   if (p->next == NULL) {
+       head = p;
+       return ;
+   } 
+   reverse(p->next);
+   p->next->next = p;
+   p->next = NULL;
+}
+
+template<class T> void LinkedList<T>::reverse(ListNode<T> *left, ListNode<T> *right) {
+    if (left == right) {
+        return;
+    }
+    reverse(left->next, right);
+    left->next->next = left;
+    left->next = NULL; 
+}
+
+template<class T> void LinkedList<T>::reverse(int m, int n) {
+    ListNode<T> *m_prev = NULL;
+    ListNode<T> *m_cur = NULL;
+    ListNode<T> *n_cur = NULL;
+    ListNode<T> *n_next = NULL;
+    push(0);
+    int count = 1;
+    m_prev = head;
+    m_cur = head->next;
+    while (count != m) {
+        m_prev = m_prev->next;
+        m_cur = m_cur->next;
+        count++; 
+    }
+    count = 1;
+    n_cur = head->next;
+    n_next = n_cur->next;
+    while (count != n) {
+        n_cur = n_cur->next;
+        n_next = n_next->next;
+        count++;
+    }
+
+    reverse(m_cur, n_cur);
+    m_prev->next = n_cur;
+    m_cur->next = n_next;
+
+    ListNode<T> *tmp = head;
+    head = head->next;
+    delete tmp;
+}
+
 
 template<class T> LinkedList<T>::LinkedList(const LinkedList<T> &l) {
     if (l.head == NULL) {
