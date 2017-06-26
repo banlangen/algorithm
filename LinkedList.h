@@ -16,6 +16,10 @@ class LinkedList {
     private :
         ListNode<T> *head;
         void reverse(ListNode<T> *, ListNode<T> *);
+        void insertionSort();
+        void insertionSortRecursion(ListNode<T> *, ListNode<T> *);
+        void selectionSort();
+        void selectionSortRecursion(ListNode<T> *, ListNode<T> *);
     public :    
         LinkedList();
         //LinkedList(std::istream &);
@@ -30,10 +34,8 @@ class LinkedList {
         void reverse();
         void reverse(ListNode<T> *);
         void reverse(int m, int n);
-        void selectionSort();
-        void selectionSort(ListNode<T> *, ListNode<T> *);
-        void insertionSort();
-        void insertionSort(ListNode<T> *, ListNode<T> *);
+        void selectionSort(bool recursive);
+        void insertionSort(bool);
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -87,7 +89,7 @@ template<class T> void LinkedList<T>::selectionSort() {
    pop();
 }
 
-template<class T> void LinkedList<T>::selectionSort(ListNode<T> *start, ListNode<T> *prev) {
+template<class T> void LinkedList<T>::selectionSortRecursion(ListNode<T> *start, ListNode<T> *prev) {
     if (start == NULL) {
         return;
     }
@@ -112,12 +114,11 @@ template<class T> void LinkedList<T>::selectionSort(ListNode<T> *start, ListNode
     swap(&start->next, &min_idx->next);
     swap(&start, &min_idx);
 
-    selectionSort(start->next, prev->next);
+    selectionSortRecursion(start->next, prev->next);
 }
 
 template<class T> void LinkedList<T>::insertionSort() {
     if (head != NULL && head->next != NULL) {
-        push(0);
         ListNode<T> *unsorted = head->next->next;
         ListNode<T> *unsorted_prev = head->next;
 
@@ -142,11 +143,31 @@ template<class T> void LinkedList<T>::insertionSort() {
                 unsorted_prev = unsorted_prev->next;
             }
         }
-        pop();
     }
 }
 
-template<class T> void LinkedList<T>::insertionSort(ListNode<T> *start, ListNode<T> *prev){
+
+template<class T> void LinkedList<T>::selectionSort(bool recursive) {
+    push(0);
+    if (recursive) {
+        selectionSortRecursion(head->next, head);
+    } else { 
+        selectionSort();
+    }
+    pop();
+}
+
+template<class T> void LinkedList<T>::insertionSort(bool recursive) {
+    push(0);
+    if (recursive) {
+        insertionSortRecursion(head->next, head);
+    } else {
+        insertionSort();
+    }
+    pop();
+}
+
+template<class T> void LinkedList<T>::insertionSortRecursion(ListNode<T> *start, ListNode<T> *prev){
     if (start == NULL) {
        return ;
     } 
@@ -158,13 +179,13 @@ template<class T> void LinkedList<T>::insertionSort(ListNode<T> *start, ListNode
             idx_prev->next = start;
             start->next = idx;
             start = prev->next;
-            insertionSort(start, prev);
+            insertionSortRecursion(start, prev);
             return;
         }
         idx = idx->next;
         idx_prev = idx_prev->next;
     }
-    insertionSort(start->next,prev->next);
+    insertionSortRecursion(start->next,prev->next);
 }
 
 template<class T> void LinkedList<T>::reverse() {

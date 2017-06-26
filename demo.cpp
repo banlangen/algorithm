@@ -20,11 +20,9 @@ int main(void) {
         list.reverse(atoi(m.c_str()), atoi(n.c_str()));
         list.printList();
     }*/
-    list.push(0);
     begin = clock();
-    list.selectionSort(list.getListHead()->next, list.getListHead());
+    list.selectionSort(true);
     end = clock();
-    list.pop();
     std::cout <<"ElapseTime is " << (double) (end - begin) / CLOCKS_PER_SEC << std::endl;
     list.printList();
 }
