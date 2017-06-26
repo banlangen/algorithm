@@ -22,6 +22,9 @@ class LinkedList {
         void selectionSortRecursion(ListNode<T> *, ListNode<T> *);
         void bubbleSort();
         void bubbleSortRecursion(ListNode<T> *);
+        ListNode<T> *merge(ListNode<T> *, ListNode<T> *);
+        ListNode<T> *mergeSortRecursion(ListNode<T> *);
+        void split(ListNode<T> *, ListNode<T> **, ListNode<T> **);  
     public :    
         LinkedList();
         //LinkedList(std::istream &);
@@ -39,6 +42,7 @@ class LinkedList {
         void selectionSort(bool);
         void insertionSort(bool);
         void bubbleSort(bool recursive = true);
+        void mergeSort();
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -343,5 +347,81 @@ template<class T> void LinkedList<T>::printList() {
         node = node->next;
     }
     std::cout << std::endl;
-} 
+}
+
+template<class T> void LinkedList<T>::mergeSort() {
+    if (head == NULL || head->next == NULL) {
+        return ;
+    }
+    head = mergeSortRecursion(head);
+}
+
+template<class T> ListNode<T> *LinkedList<T>::mergeSortRecursion(ListNode<T> *index) {
+    if(index == NULL || index->next == NULL) {
+        return index;
+    } 
+    ListNode<T> *left = NULL;
+    ListNode<T> *right = NULL;
+    split(index, &left, &right); 
+    ListNode<T> *leftRes = mergeSortRecursion(left);
+    ListNode<T> *rightRes = mergeSortRecursion(right);
+    return merge(leftRes, rightRes); 
+}
+
+template<class T> void LinkedList<T>::split(ListNode<T> *source, ListNode<T> **left, ListNode<T> **right) {
+    if ( source == NULL || source->next == NULL) {
+        *left = source;
+        *right = NULL;
+    } 
+    ListNode<T> *slow = source;
+    ListNode<T> *fast = source->next;
+    while (fast != NULL && fast->next != NULL) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    *left = source;
+    *right = slow->next;
+    slow->next = NULL;
+}
+
+template<class T> ListNode<T> *LinkedList<T>::merge(ListNode<T> *left, ListNode<T> *right) {
+    if (left == NULL) {
+        return right;
+    }
+    if (right == NULL) {
+        return left;
+    }
+    ListNode<T> *result = new ListNode<T>(0);
+    ListNode<T> *index = result;
+
+    while (left != NULL && right != NULL) {
+        if (left->data <= right->data) {
+            index->next = left;
+            left = left->next;
+            index = index->next;
+        } else {
+            index->next = right;
+            right = right->next;
+            index = index->next;
+        }
+    }
+
+    while (left != NULL) {
+        index->next = left;
+        left = left->next;
+        index = index->next;
+    }
+
+    while (right != NULL) {
+        index->next = right;
+        right = right->next;
+        index = index->next;
+    }
+    
+    ListNode<T> *tmp = result;
+    result = result->next;
+    delete tmp;
+    return result;
+}
+
 #endif
