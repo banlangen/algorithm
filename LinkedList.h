@@ -23,6 +23,7 @@ class LinkedList {
 
         LinkedList(const LinkedList &);
         void push(T);
+        void pop();
         void swap(ListNode<T> **, ListNode<T> **);
         void append(T);
         void printList();
@@ -32,6 +33,7 @@ class LinkedList {
         void selectionSort();
         void selectionSort(ListNode<T> *, ListNode<T> *);
         void insertionSort();
+        void insertionSort(ListNode<T> *, ListNode<T> *);
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -43,6 +45,12 @@ template<class T> LinkedList<T>::LinkedList() : head(NULL) {
         append(i);
     }
     std::cin.clear(); 
+}
+
+template<class T> void LinkedList<T>::pop() {
+    ListNode<T> *tmp = head;
+    head = head->next;
+    delete tmp;
 }
 
 template<class T> void LinkedList<T>::swap(ListNode<T> **left, ListNode<T> **right) {
@@ -76,9 +84,7 @@ template<class T> void LinkedList<T>::selectionSort() {
        cur = cur->next;
        prev = prev->next;
    } 
-   ListNode<T> *tmp = head;
-   head = head->next;
-   delete tmp;
+   pop();
 }
 
 template<class T> void LinkedList<T>::selectionSort(ListNode<T> *start, ListNode<T> *prev) {
@@ -136,11 +142,30 @@ template<class T> void LinkedList<T>::insertionSort() {
                 unsorted_prev = unsorted_prev->next;
             }
         }
-        ListNode<T> *tmp = head;
-        head = head->next;
-        delete tmp;
+        pop();
     }
-} 
+}
+
+template<class T> void LinkedList<T>::insertionSort(ListNode<T> *start, ListNode<T> *prev){
+    if (start == NULL) {
+       return ;
+    } 
+    ListNode<T> *idx_prev = head;
+    ListNode<T> *idx = head->next;
+    while (idx != start) {
+        if (idx->data > start->data) {
+            prev->next= start->next;
+            idx_prev->next = start;
+            start->next = idx;
+            start = prev->next;
+            insertionSort(start, prev);
+            return;
+        }
+        idx = idx->next;
+        idx_prev = idx_prev->next;
+    }
+    insertionSort(start->next,prev->next);
+}
 
 template<class T> void LinkedList<T>::reverse() {
     ListNode<T> *prev = NULL;
@@ -267,6 +292,4 @@ template<class T> void LinkedList<T>::printList() {
     }
     std::cout << std::endl;
 } 
-
-
 #endif

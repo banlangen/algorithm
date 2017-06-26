@@ -3,11 +3,13 @@
 #include "LinkedList.h"
 #include <string>
 #include <cstdlib>
+#include <ctime>
 
 
 
 int main(void) {
     LinkedList<int> list;
+    clock_t begin, end;
     //list.reverse(list.getListHead());
     /*std::string str;
     while (std::getline(std::cin, str)) {
@@ -19,6 +21,10 @@ int main(void) {
         list.printList();
     }*/
     list.push(0);
+    begin = clock();
     list.selectionSort(list.getListHead()->next, list.getListHead());
+    end = clock();
+    list.pop();
+    std::cout <<"ElapseTime is " << (double) (end - begin) / CLOCKS_PER_SEC << std::endl;
     list.printList();
 }
