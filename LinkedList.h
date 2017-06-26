@@ -34,7 +34,7 @@ class LinkedList {
         void reverse();
         void reverse(ListNode<T> *);
         void reverse(int m, int n);
-        void selectionSort(bool recursive);
+        void selectionSort(bool);
         void insertionSort(bool);
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
