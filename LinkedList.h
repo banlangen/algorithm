@@ -20,6 +20,8 @@ class LinkedList {
         void insertionSortRecursion(ListNode<T> *, ListNode<T> *);
         void selectionSort();
         void selectionSortRecursion(ListNode<T> *, ListNode<T> *);
+        void bubbleSort();
+        void bubbleSortRecursion(ListNode<T> *);
     public :    
         LinkedList();
         //LinkedList(std::istream &);
@@ -36,6 +38,7 @@ class LinkedList {
         void reverse(int m, int n);
         void selectionSort(bool);
         void insertionSort(bool);
+        void bubbleSort(bool recursive = true);
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -186,6 +189,34 @@ template<class T> void LinkedList<T>::insertionSortRecursion(ListNode<T> *start,
         idx_prev = idx_prev->next;
     }
     insertionSortRecursion(start->next,prev->next);
+}
+
+template<class T> void LinkedList<T>::bubbleSort(bool recursive) {
+    push(0);
+    if (recursive) {
+        bubbleSortRecursion(NULL);
+    }
+    pop();
+}
+
+template<class T> void LinkedList<T>::bubbleSortRecursion(ListNode<T> *end) {
+    if (head->next == end) {
+        return;
+    }
+    ListNode<T> *idx = head->next;
+    ListNode<T> *idx_prev = head;
+    while (idx->next != end) {
+        if (idx->data > idx->next->data) {
+            ListNode<T> *tmp = idx->next;
+            swap(&idx_prev->next, &idx->next);
+            swap(&idx->next, &tmp->next);
+            idx_prev = idx_prev->next;
+        } else {
+            idx = idx->next;
+            idx_prev = idx_prev->next;
+        }
+    }   
+    bubbleSortRecursion(idx);
 }
 
 template<class T> void LinkedList<T>::reverse() {

@@ -21,6 +21,7 @@ int main(void) {
         list.printList();
     }*/
     begin = clock();
+    //list.bubbleSort(true);
     list.selectionSort(true);
     end = clock();
     std::cout <<"ElapseTime is " << (double) (end - begin) / CLOCKS_PER_SEC << std::endl;
