@@ -4,10 +4,12 @@
 #include <string>
 #include <cstdlib>
 
+
+
 int main(void) {
     LinkedList<int> list;
     //list.reverse(list.getListHead());
-    std::string str;
+    /*std::string str;
     while (std::getline(std::cin, str)) {
         std::cout << "m for left, n for right" << std::endl;
         std::stringstream ss(str);
@@ -15,5 +17,8 @@ int main(void) {
         ss >> m >> n;
         list.reverse(atoi(m.c_str()), atoi(n.c_str()));
         list.printList();
-    }
+    }*/
+    list.push(0);
+    list.selectionSort(list.getListHead()->next, list.getListHead());
+    list.printList();
 }

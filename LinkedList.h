@@ -1,6 +1,7 @@
 #ifndef LINKEDLIST_H_
 #define LINKEDLIST_H_
 #include <iostream>
+#include <limits.h>
 
 template<class T>
 class ListNode {
@@ -22,11 +23,15 @@ class LinkedList {
 
         LinkedList(const LinkedList &);
         void push(T);
+        void swap(ListNode<T> **, ListNode<T> **);
         void append(T);
         void printList();
         void reverse();
         void reverse(ListNode<T> *);
         void reverse(int m, int n);
+        void selectionSort();
+        void selectionSort(ListNode<T> *, ListNode<T> *);
+        void insertionSort();
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -39,6 +44,103 @@ template<class T> LinkedList<T>::LinkedList() : head(NULL) {
     }
     std::cin.clear(); 
 }
+
+template<class T> void LinkedList<T>::swap(ListNode<T> **left, ListNode<T> **right) {
+    ListNode<T> *tmp = *left;
+    *left = *right;
+    *right = tmp;
+}
+
+template<class T> void LinkedList<T>::selectionSort() {
+   push(0);
+   ListNode<T> *prev = head;
+   ListNode<T> *cur = head->next;
+   while (cur != NULL) {
+       ListNode<T> *index = cur->next;
+       ListNode<T> *prev_index = cur; 
+       ListNode<T> *min = cur;
+       ListNode<T> *prev_min = prev;
+       T min_val = cur->data;
+       while (index != NULL) {
+           if (index->data < min_val) {
+               min_val = index->data;
+               min = index;
+               prev_min = prev_index;
+           }
+           index = index->next;
+           prev_index = prev_index->next;
+       }
+       swap(&prev->next, &prev_min->next);
+       swap(&cur->next, &min->next);
+       swap(&cur, &min);
+       cur = cur->next;
+       prev = prev->next;
+   } 
+   ListNode<T> *tmp = head;
+   head = head->next;
+   delete tmp;
+}
+
+template<class T> void LinkedList<T>::selectionSort(ListNode<T> *start, ListNode<T> *prev) {
+    if (start == NULL) {
+        return;
+    }
+
+    T min = start->data;
+    ListNode<T> *min_idx = start;
+    ListNode<T> *min_prev = prev;
+
+    ListNode<T> *idx = start;
+    ListNode<T> *idx_prev = prev;
+    while (idx != NULL) {
+        if (min > idx->data) {
+            min = idx->data;
+            min_idx = idx;
+            min_prev = idx_prev;
+        }
+        idx= idx->next;
+        idx_prev = idx_prev->next;
+    }
+    
+    swap(&prev->next, &min_prev->next);
+    swap(&start->next, &min_idx->next);
+    swap(&start, &min_idx);
+
+    selectionSort(start->next, prev->next);
+}
+
+template<class T> void LinkedList<T>::insertionSort() {
+    if (head != NULL && head->next != NULL) {
+        push(0);
+        ListNode<T> *unsorted = head->next->next;
+        ListNode<T> *unsorted_prev = head->next;
+
+        while (unsorted != NULL) {
+            ListNode<T> *sorted = head->next;
+            ListNode<T> *sorted_prev = head;
+            bool flag = true;
+            while (sorted != unsorted) {
+                if (sorted->data > unsorted->data) {
+                    sorted_prev->next = unsorted;
+                    unsorted_prev->next = unsorted->next;
+                    unsorted->next= sorted; 
+                    unsorted = unsorted_prev->next;
+                    flag = false;
+                    break;
+                }
+                sorted = sorted->next;
+                sorted_prev = sorted_prev->next;
+            }
+            if (flag) {
+                unsorted= unsorted->next;
+                unsorted_prev = unsorted_prev->next;
+            }
+        }
+        ListNode<T> *tmp = head;
+        head = head->next;
+        delete tmp;
+    }
+} 
 
 template<class T> void LinkedList<T>::reverse() {
     ListNode<T> *prev = NULL;
