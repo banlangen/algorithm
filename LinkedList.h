@@ -24,6 +24,8 @@ class LinkedList {
         void bubbleSortRecursion(ListNode<T> *);
         ListNode<T> *merge(ListNode<T> *, ListNode<T> *);
         ListNode<T> *mergeSortRecursion(ListNode<T> *);
+        void quickSortRecursion(ListNode<T> *, ListNode<T> *);
+        ListNode<T> *partition(ListNode<T> *, ListNode<T> *);
         void split(ListNode<T> *, ListNode<T> **, ListNode<T> **);  
     public :    
         LinkedList();
@@ -43,6 +45,7 @@ class LinkedList {
         void insertionSort(bool);
         void bubbleSort(bool recursive = true);
         void mergeSort();
+        void quickSort();
         void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
@@ -424,4 +427,46 @@ template<class T> ListNode<T> *LinkedList<T>::merge(ListNode<T> *left, ListNode<
     return result;
 }
 
+template<class T> void LinkedList<T>::quickSort() {
+    push(0);
+    quickSortRecursion(head->next, NULL);
+    pop();    
+}
+
+template<class T> void LinkedList<T>::quickSortRecursion(ListNode<T> *left, ListNode<T> *right) {
+    if (left == right || left->next == right) {
+        return;
+    }
+    
+    ListNode<T> *pivot = partition(left, right);
+    quickSortRecursion(left, pivot);
+    quickSortRecursion(pivot->next, right); 
+}
+
+template<class T> ListNode<T> *LinkedList<T>::partition(ListNode<T> *left, ListNode<T> *right) {
+    T key = left->data;
+    ListNode<T> *less_key_prev = NULL;
+    ListNode<T> *less_key = left;
+    ListNode<T> *index = left->next;
+    ListNode<T> *index_prev = left;
+    while (index != right) {
+        if (index->data < key) {
+            less_key_prev = less_key;
+            less_key = less_key->next;
+            swap(&less_key_prev->next, &index_prev->next);
+            swap(&less_key->next, &index->next); 
+            swap(&less_key, &index);
+            if (index == index_prev) {
+                index_prev = less_key;
+            }
+        } 
+        index = index->next;
+        index_prev = index_prev->next;
+    }
+    T tmp = left->data;
+    left->data = less_key->data;
+    less_key->data = tmp;
+
+    return less_key;
+}
 #endif

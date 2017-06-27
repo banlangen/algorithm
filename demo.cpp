@@ -22,7 +22,7 @@ int main(void) {
     }*/
     begin = clock();
     //list.bubbleSort(true);
-    list.mergeSort();
+    list.quickSort();
     end = clock();
     std::cout <<"ElapseTime is " << (double) (end - begin) / CLOCKS_PER_SEC << std::endl;
     list.printList();
