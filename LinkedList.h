@@ -284,9 +284,7 @@ template<class T> void LinkedList<T>::reverse(int m, int n) {
     m_prev->next = n_cur;
     m_cur->next = n_next;
 
-    ListNode<T> *tmp = head;
-    head = head->next;
-    delete tmp;
+    pop();
 }
 
 
