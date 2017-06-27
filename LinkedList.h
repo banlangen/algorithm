@@ -29,6 +29,7 @@ class LinkedList {
         void split(ListNode<T> *, ListNode<T> **, ListNode<T> **);  
     public :    
         LinkedList();
+        LinkedList(ListNode<T> *);
         //LinkedList(std::istream &);
         ~LinkedList();
 
@@ -46,7 +47,7 @@ class LinkedList {
         void bubbleSort(bool recursive = true);
         void mergeSort();
         void quickSort();
-        void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
+        //void setListHead(const ListNode<T> *p) { head = const_cast<ListNode<T> *> (p) ;}
         ListNode<T> * getListHead() { return head; }
 };
 
@@ -57,6 +58,10 @@ template<class T> LinkedList<T>::LinkedList() : head(NULL) {
         append(i);
     }
     std::cin.clear(); 
+}
+
+template<class T> LinkedList<T>::LinkedList(ListNode<T> *l) {
+    head = l;
 }
 
 template<class T> void LinkedList<T>::pop() {
